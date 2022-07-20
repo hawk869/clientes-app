@@ -5,6 +5,7 @@ import {catchError, map, Observable, of, throwError} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import swal from "sweetalert2";
 import {Router} from "@angular/router";
+import {formatDate} from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -15,19 +16,46 @@ export class ClienteService {
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
 
   constructor(private http: HttpClient, private router: Router) { }
-
-  getClientes(): Observable<Cliente[]> {
+/*
+  getClientes(): Observable<any> {
     // return of(CLIENTES);
     // return this.http.get<Cliente[]>(this.urlEndPoint);
     return this.http.get(this.urlEndPoint).pipe(
-      map(response => response as Cliente[])
+      map((response: any) => {
+        let clientes = response as Cliente[];
+        return clientes.map(cliente => {
+          cliente.nombre = cliente.nombre.toUpperCase();
+          // cliente.apellido = cliente.apellido.toUpperCase();
+          // formato de fecha
+          // EEEEE, MMMMM, yyyy o 3 digitos para simplificar el formato dd/MM/yyyy
+          // cliente.createAt = formatDate(cliente.createAt, 'EEEE dd MMMM yyyy', 'es-ES');
+          return cliente;
+        });
+      })
+    );
+  }
+ */
+  getClientes(page: number): Observable<any> {
+    return this.http.get(`${this.urlEndPoint}/page/${page}`).pipe(
+      map((response: any) => {
+        (response.content as Cliente[]).map(cliente => {
+          cliente.nombre = cliente.nombre.toUpperCase();
+          return cliente;
+        });
+        return response;
+      })
     );
   }
   create(cliente: Cliente): Observable<Cliente> {
     return this.http.post<Cliente>(this.urlEndPoint, cliente, {headers: this.httpHeaders}).pipe(
       catchError(e => {
+
+        if (e.status == 400) {
+          return throwError(e);
+        }
+
         console.log(e.error.Mensaje);
-        swal.fire('Error al crear cliente', e.error.Mensaje, 'error');
+        swal.fire(e.error.Mensaje, e.error.Error, 'error');
         return throwError(e);
       }
     ));
@@ -47,6 +75,9 @@ export class ClienteService {
   update(cliente: Cliente): Observable<Cliente> {
     return this.http.put<Cliente>(`${this.urlEndPoint}/${cliente.id}`, cliente, {headers: this.httpHeaders}).pipe(
       catchError(e => {
+        if (e.status == 400) {
+          return throwError(e);
+        }
           console.log(e.error.Mensaje);
           swal.fire('Error al editar cliente', e.error.Mensaje, 'error');
           return throwError(e);
