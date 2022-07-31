@@ -59,15 +59,7 @@
       <div class="form-group row">
         <label for="createAt" class="col-form-label col-sm-2">Fecha de registro</label>
         <div class="col-sm-6">
-<!--          <input type="date" class="form-control" [(ngModel)]="cliente.createAt" name="createAt" id="createAt"  #createAt="ngModel">-->
-<!--          <mat-form-field appearance="fill">-->
-<!--            <mat-label>Choose a date</mat-label>-->
-<!--            <input matInput [matDatepicker]="picker" class="form-control" [(ngModel)]="cliente.createAt" name="createAt" id="createAt">-->
-<!--            <mat-hint>MM/DD/YYYY</mat-hint>-->
-<!--            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>-->
-<!--            <mat-datepicker #picker></mat-datepicker>-->
-<!--          </mat-form-field>-->
-<!--          <mat-label>Fecha de registro</mat-label>-->
+
           <input matInput [matDatepicker]="picker" class="form-control" [(ngModel)]="cliente.createAt" name="createAt" id="createAt" style="display: inline; width:300px;">
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>

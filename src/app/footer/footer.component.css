@@ -1,5 +1,5 @@
 .footer{
-  position: absolute;
+  position: fixed;
   /*para dejar el fooeter al final de la pagina*/
   bottom: 0px;
   height: 60px;
