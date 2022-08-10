@@ -4,10 +4,10 @@
   </li>
 </ul>
 
-<div class="card bg-dark text-white">
+<div class="card text-bg-secondary text-white">
   <div class="card-header" *ngIf="!cliente.id else anotherBlock">{{ titulo }}</div>
   <ng-template #anotherBlock>
-    <div class="card-header">{{ titulo2 }}</div>
+    <div class="card-header text-center">{{ titulo2 }}</div>
   </ng-template>
   <div class="card-body">
 
@@ -15,7 +15,7 @@
 
       <div class="form-group row">
         <label for="nombre" class="col-form-label col-sm-2">Nombre</label>
-        <div class="col-sm-6">
+        <div class="col-sm-6 mb-3">
           <input type="text" class="form-control" [(ngModel)]="cliente.nombre" name="nombre" id="nombre"  #nombre="ngModel"> <!-- required minlength="4"-->
           <!--    dirty a medida q va escribiendo muestra el error y touched muestra el mensaje de error cuando nos salimos del foco del input     -->
           <div class="alert alert-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
@@ -29,7 +29,7 @@
         </div>
       </div>
 
-      <div class="form-group row">
+      <div class="form-group row mb-3">
         <label for="apellido" class="col-form-label col-sm-2">Apellido</label>
         <div class="col-sm-6">
           <input type="text" class="form-control" [(ngModel)]="cliente.apellido" name="apellido" id="apellido"  #apellido="ngModel"> <!-- required -->
@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      <div class="form-group row">
+      <div class="form-group row mb-3">
         <label for="email" class="col-form-label col-sm-2">E-mail</label>
         <div class="col-sm-6">
           <input type="text" class="form-control" [(ngModel)]="cliente.email" name="email" id="email"  #email="ngModel"> <!-- required email -->
@@ -56,18 +56,26 @@
         </div>
       </div>
 
-      <div class="form-group row">
+      <div class="form-group row mb-3">
         <label for="createAt" class="col-form-label col-sm-2">Fecha de registro</label>
         <div class="col-sm-6">
-
-          <input matInput [matDatepicker]="picker" class="form-control" [(ngModel)]="cliente.createAt" name="createAt" id="createAt" style="display: inline; width:300px;">
+          <input [matDatepicker]="picker" class="form-control" [(ngModel)]="cliente.createAt" name="createAt" id="createAt" style="display: inline; width:300px;">
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-
         </div>
       </div>
 
-      <div class="form-group row">
+      <div class="form-group row mb-3">
+        <label for="region" class="col-form-label col-sm-2">Region</label>
+        <div class="col-sm-6">
+          <select [compareWith]="compararRegion" class="form-select" [(ngModel)]="cliente.region" name="region" id="region" style="width:500px;">
+            <option [ngValue]="undefined">Selecciona una región</option>
+            <option *ngFor="let region of regiones" [ngValue]="region">{{region.nombre}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group row mb-3">
         <div class="col-sm-6">
           <button type="submit" class="btn btn-primary" (click)="create()" *ngIf="!cliente.id else elseBlock" [disabled]="!clienteForm.form.valid">Crear</button>
           <ng-template #elseBlock>

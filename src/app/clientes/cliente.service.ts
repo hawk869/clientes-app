@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import {Cliente} from "./cliente";
-import {CLIENTES} from "./clientes.json";
-import {catchError, map, Observable, of, throwError} from "rxjs";
-import {HttpClient, HttpEvent, HttpHeaders, HttpRequest} from "@angular/common/http";
-import swal from "sweetalert2";
+import {catchError, map, Observable, throwError} from "rxjs";
+import {HttpClient, HttpEvent, HttpRequest} from "@angular/common/http";
 import {Router} from "@angular/router";
-import {formatDate} from "@angular/common";
+import {Region} from "./region";
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +11,22 @@ import {formatDate} from "@angular/common";
 export class ClienteService {
 
   private urlEndPoint: string = 'http://localhost:8080/api/clientes';
-  private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
+  // private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
 
   constructor(private http: HttpClient, private router: Router) { }
+
+  // private addAuthorizationHeader(){
+  //   let token = this.authservice.token;
+  //   if (token != null){
+  //     return this.httpHeaders.append('Authorization', 'Bearer ' + token);
+  //   }
+  //   return this.httpHeaders;
+  // }
+
+  getRegiones(): Observable<Region[]> {
+    return this.http.get<Region[]>(this.urlEndPoint + '/regiones');
+}
+
 /*
   getClientes(): Observable<any> {
     // return of(CLIENTES);
@@ -47,15 +58,13 @@ export class ClienteService {
     );
   }
   create(cliente: Cliente): Observable<Cliente> {
-    return this.http.post<Cliente>(this.urlEndPoint, cliente, {headers: this.httpHeaders}).pipe(
+    // , {headers: this.addAuthorizationHeader()}
+    return this.http.post<Cliente>(this.urlEndPoint, cliente).pipe(
       catchError(e => {
-
         if (e.status == 400) {
           return throwError(e);
         }
-
         console.log(e.error.Mensaje);
-        swal.fire(e.error.Mensaje, e.error.Error, 'error');
         return throwError(e);
       }
     ));
@@ -64,32 +73,40 @@ export class ClienteService {
   getCliente(id): Observable<Cliente> {
     return this.http.get<Cliente>(`${this.urlEndPoint}/${id}`).pipe(
       catchError(e => {
-        this.router.navigate(['/clientes']);
-        console.log(e.error.Mensaje);
-        swal.fire('Error al editar cliente', e.error.Mensaje, 'error');
+        if (e.status != 401 && e.error.Mensaje){
+          this.router.navigate(['/clientes']);
+          if (e.error.Mensaje){
+            console.log(e.error.Mensaje);
+          }
+        }
         return throwError(e);
       }
     ));
   }
 
   update(cliente: Cliente): Observable<Cliente> {
-    return this.http.put<Cliente>(`${this.urlEndPoint}/${cliente.id}`, cliente, {headers: this.httpHeaders}).pipe(
+    return this.http.put<Cliente>(`${this.urlEndPoint}/${cliente.id}`, cliente).pipe(
       catchError(e => {
+        // if (this.isNotAuthorized(e)){
+        //   return throwError(e)
+        // }
         if (e.status == 400) {
           return throwError(e);
         }
+        if (e.error.Mensaje){
           console.log(e.error.Mensaje);
-          swal.fire('Error al editar cliente', e.error.Mensaje, 'error');
+        }
           return throwError(e);
         }
       ));
   }
 
   delete(id: number): Observable<Cliente> {
-    return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`, {headers: this.httpHeaders}).pipe(
+    return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`).pipe(
       catchError(e => {
-        console.log(e.error.Mensaje);
-        swal.fire('Error al eliminar cliente', e.error.Mensaje, 'error');
+        if (e.error.Mensaje){
+          console.log(e.error.Mensaje);
+        }
         return throwError(e);
       })
     );
@@ -99,9 +116,14 @@ export class ClienteService {
     let formData = new FormData();
     formData.append('archivo', archivo);
     formData.append('id', id);
-
+    // let httHeaders = new HttpHeaders();
+    // let token = this.authservice.token;
+    // if (token != null){
+    //   httHeaders = httHeaders.append('Authorization', 'Bearer ' + token);
+    // }
     const req = new HttpRequest('POST', `${this.urlEndPoint}/upload`, formData, {
-      reportProgress: true
+      reportProgress: true,
+      // headers: httHeaders
     });
 
     return this.http.request(req);
