@@ -29,6 +29,33 @@
                 <img *ngIf="cliente?.foto" src="http://localhost:8080/api/uploads/img/{{cliente.foto}}" class="img-thumbnail rounded">
               </div>
             </div>
+            <div class="row">
+              <div *ngIf="cliente.facturas.length == 0" class="alert alert-info my-4">
+                El cliente {{ cliente.nombre }} {{ cliente.apellido }} no tiene facturas!
+              </div>
+              <table *ngIf="cliente.facturas.length > 0" class="table table-bordered table-striped my-4">
+                <thead>
+                  <tr>
+                    <th>id factura</th>
+                    <th>Descripcion</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Detalle</th>
+                    <th>Eliminar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let factura of cliente.facturas">
+                    <td>{{ factura.id }}</td>
+                    <td>{{ factura.descripcion }}</td>
+                    <td>{{ factura.createAt }}</td>
+                    <td>{{ factura.total }}</td>
+                    <td><button class="btn btn-outline-primary btn-sm" type="button" [routerLink]="['/facturas', factura.id]">Ver</button></td>
+                    <td><button class="btn btn-outline-danger btn-sm" type="button" (click)="delete(factura)">Eliminar</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
