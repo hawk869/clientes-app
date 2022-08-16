@@ -29,6 +29,9 @@
                 <img *ngIf="cliente?.foto" src="http://localhost:8080/api/uploads/img/{{cliente.foto}}" class="img-thumbnail rounded">
               </div>
             </div>
+            <div class="row" *ngIf="authService.hasRole('ROLE_ADMIN')">
+              <button class="btn btn-outline-success btn-sm" [routerLink]="['/facturas/form', cliente.id]" type="button">Crear Factura</button>
+            </div>
             <div class="row">
               <div *ngIf="cliente.facturas.length == 0" class="alert alert-info my-4">
                 El cliente {{ cliente.nombre }} {{ cliente.apellido }} no tiene facturas!
@@ -41,7 +44,7 @@
                     <th>Fecha</th>
                     <th>Total</th>
                     <th>Detalle</th>
-                    <th>Eliminar</th>
+                    <th *ngIf="authService.hasRole('ROLE_ADMIN')">Eliminar</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -51,7 +54,7 @@
                     <td>{{ factura.createAt }}</td>
                     <td>{{ factura.total }}</td>
                     <td><button class="btn btn-outline-primary btn-sm" type="button" [routerLink]="['/facturas', factura.id]">Ver</button></td>
-                    <td><button class="btn btn-outline-danger btn-sm" type="button" (click)="delete(factura)">Eliminar</button></td>
+                    <td *ngIf="authService.hasRole('ROLE_ADMIN')"><button class="btn btn-outline-danger btn-sm" type="button" (click)="delete(factura)">Eliminar</button></td>
                   </tr>
                 </tbody>
               </table>

@@ -5,8 +5,7 @@ import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-detalle-factura',
-  templateUrl: './detalle-factura.component.html',
-  styleUrls: ['./detalle-factura.component.css']
+  templateUrl: './detalle-factura.component.html'
 })
 export class DetalleFacturaComponent implements OnInit {
 

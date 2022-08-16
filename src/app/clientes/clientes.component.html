@@ -15,20 +15,19 @@
     <table class="table table-bordered table-striped" *ngIf="clientes?.length>0">
       <thead>
         <tr>
-<!--          *ngIf="authService.hasRole('ROLE_USER')" -->
-          <th >Perfil</th>
+          <th *ngIf="authService.hasRole('ROLE_USER')">Perfil</th>
           <th>Nombre</th>
           <th>Apellido</th>
           <th>E-mail</th>
           <th>Fecha</th>
+          <th *ngIf="authService.hasRole('ROLE_ADMIN')">Crear Factura</th>
           <th *ngIf="authService.hasRole('ROLE_ADMIN')">Editar</th>
           <th *ngIf="authService.hasRole('ROLE_ADMIN')">Eliminar</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let cliente of clientes">
-<!--    *ngIf="authService.hasRole('ROLE_USER')"      -->
-          <td >
+          <td *ngIf="authService.hasRole('ROLE_USER')">
             <img (click)="abrirModal(cliente)" *ngIf="cliente?.foto"
                  src="http://localhost:8080/api/uploads/img/{{cliente.foto}}" class="img-thumbnail rounded"
                   style="width: 50px; height: 50px; cursor: pointer;" alt="{{cliente.foto}}">
@@ -42,6 +41,7 @@
           <td>{{cliente.apellido | uppercase}}</td>
           <td>{{cliente.email}}</td>
           <td>{{cliente.createAt | date:"EEEE dd MMMM yyyy"}}</td>
+          <td *ngIf="authService.hasRole('ROLE_ADMIN')"><button class="btn btn-outline-success btn-sm" [routerLink]="['/facturas/form', cliente.id]" type="button">Crear Factura</button></td>
           <td *ngIf="authService.hasRole('ROLE_ADMIN')">
             <button class="btn btn-rounded btn-primary" type="button" [routerLink]="['/clientes/form', cliente.id]">Editar</button>
           </td>

@@ -1,5 +1,5 @@
 import {ItemFactura} from "./item-factura";
-import {Cliente} from "../../cliente";
+import {Cliente} from "../../clientes/cliente";
 
 export class Factura {
 
@@ -11,4 +11,11 @@ export class Factura {
   total      : number;
   createAt   : string;
 
+  calcularGranTotal(): number{
+    this.total = 0;
+    this.items.forEach((item)=>{
+      this.total += item.calcularImporte();
+    })
+    return this.total;
+  }
 }

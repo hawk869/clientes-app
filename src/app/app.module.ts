@@ -10,7 +10,7 @@ import { FormComponent } from './clientes/form.component';
 import { PaginatorComponent } from './paginator/paginator.component';
 import {RouterModule, Routes} from "@angular/router";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {registerLocaleData} from "@angular/common";
 import localeEs from "@angular/common/locales/es";
 import {ClienteService} from "./clientes/cliente.service";
@@ -24,7 +24,10 @@ import {AuthGuard} from "./usuarios/guards/auth.guard";
 import {RoleGuard} from "./usuarios/guards/role.guard";
 import {TokenInterceptor} from "./usuarios/interceptors/token.interceptor";
 import {AuthInterceptor} from "./usuarios/interceptors/auth.interceptor";
-import { DetalleFacturaComponent } from './clientes/facturas/detalle-factura.component';
+import { DetalleFacturaComponent } from './facturas/detalle-factura.component';
+import { FacturasComponent } from './facturas/facturas.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatInputModule} from '@angular/material/input';
 
 registerLocaleData(localeEs, 'es-ES');
 const routes: Routes = [
@@ -35,7 +38,8 @@ const routes: Routes = [
   {path: 'clientes/form', component: FormComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_ADMIN'}},
   {path: 'clientes/form/:id', component: FormComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_ADMIN'}},
   {path: 'login', component: LoginComponent},
-  {path: 'facturas/:id', component: DetalleFacturaComponent}
+  {path: 'facturas/:id', component: DetalleFacturaComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_USER'}},
+  {path: 'facturas/form/:id', component: FacturasComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_ADMIN'}}
 ];
 
 @NgModule({
@@ -49,7 +53,8 @@ const routes: Routes = [
     PaginatorComponent,
     DetalleComponent,
     LoginComponent,
-    DetalleFacturaComponent
+    DetalleFacturaComponent,
+    FacturasComponent
   ],
   imports: [
     BrowserModule,
@@ -59,7 +64,10 @@ const routes: Routes = [
     NoopAnimationsModule,
     MatDatepickerModule,
     MatFormFieldModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatInputModule
   ],
   providers: [ClienteService,
     {provide: LOCALE_ID, useValue: 'es-ES'},

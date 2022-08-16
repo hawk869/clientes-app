@@ -5,8 +5,8 @@ import swal from "sweetalert2";
 import {HttpEventType} from "@angular/common/http";
 import {ModalService} from "./modal.service";
 import {AuthService} from "../../usuarios/auth.service";
-import {FacturasService} from "../facturas/services/facturas.service";
-import {Factura} from "../facturas/models/factura";
+import {FacturasService} from "../../facturas/services/facturas.service";
+import {Factura} from "../../facturas/models/factura";
 
 @Component({
   selector: 'detalle-cliente',
